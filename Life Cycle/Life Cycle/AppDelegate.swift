@@ -21,28 +21,4 @@ var window: UIWindow?
         return true
     }
     
-    func applicationWillResignActive(_ application: UIApplication) {
-        print("Произошло переключение на другое приложение")
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        print("Приложение активно")
-    }
-    
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        print("Приложение перешло в фоновый режим")
-        
-        // В бэкграунде выполняется логин на страницу профиля (LoginViewController: 96 строка)
-        // Время работы 30 секунд
-
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        print("Приложение перешло в обычный режим")
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        print("Приложение было закрыто")
-    }
-    
 }

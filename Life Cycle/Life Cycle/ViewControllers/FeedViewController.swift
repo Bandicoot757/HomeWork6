@@ -12,14 +12,14 @@ import iOSIntPackage
 final class FeedViewController: UIViewController {
     
     var image = UIImage(named: "City")
+    let operation: OperationQueue = OperationQueue()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        editImage()
         view.backgroundColor = .white
     }
     
-    // Далее очень тупой код, но мне лень выносить его в отдельные вьюхи для одной домашки
+    // Далее идет грубый код, но ради одной домашки не стал выносить в отдельные вьюхи
     
     private lazy var editImageButton: UIButton = {
         let button: UIButton = UIButton()
@@ -38,7 +38,6 @@ final class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(returnImage), for: .touchUpInside)
         return button
     }()
-    
     
     private lazy var pictureView: UIView = {
         let view: UIView = UIView()
@@ -94,15 +93,28 @@ final class FeedViewController: UIViewController {
         
     }
     
+    // Вынос процесс обработки ихображения в отдельный поток
+    
     @objc func editImage() {
-        let processor = ImageProcessor()
-        processor.processImage(sourceImage: image ?? UIImage(), filter: .sepia(intensity: 0.5), completion: {
-            image in
-            imageView.image = image
-        })
+        operation.addOperation {
+            let processor = ImageProcessor()
+            processor.processImage(sourceImage: self.image ?? UIImage(), filter: .sepia(intensity: 0.5), completion: { image in
+                self.setImage(image: image)
+            })
+        }
+    }
+    
+    // работа с UI в main
+    
+    func setImage(image: UIImage?) {
+        OperationQueue.main.addOperation {
+            self.imageView.image = image
+        }
     }
     
     @objc func returnImage() {
         imageView.image = image
+        view.backgroundColor = .white
     }
+    
 }
